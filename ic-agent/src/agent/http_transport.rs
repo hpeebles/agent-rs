@@ -34,14 +34,6 @@ const IC0_SUB_DOMAIN: &str = ".ic0.app";
 
 impl ReqwestHttpReplicaV2Transport {
     pub fn create<U: Into<String>>(url: U) -> Result<Self, AgentError> {
-        let mut tls_config = rustls::ClientConfig::builder()
-            .with_safe_defaults()
-            .with_webpki_roots()
-            .with_no_client_auth();
-
-        // Advertise support for HTTP/2
-        tls_config.alpn_protocols = vec![b"h2".to_vec(), b"http/1.1".to_vec()];
-
         let url = url.into();
 
         Ok(Self {
@@ -57,7 +49,6 @@ impl ReqwestHttpReplicaV2Transport {
                 })
                 .map_err(|_| AgentError::InvalidReplicaUrl(url.clone()))?,
             client: reqwest::Client::builder()
-                .use_preconfigured_tls(tls_config)
                 .build()
                 .expect("Could not create HTTP client."),
             password_manager: None,
