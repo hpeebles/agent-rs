@@ -575,7 +575,7 @@ impl Agent {
                     .await
                     .expect("unable to setTimeout");
                 }
-                None => return Err(AgentError::TimeoutWaitingForResponse()),
+                _ => return Err(AgentError::TimeoutWaitingForResponse()),
             }
         }
     }
